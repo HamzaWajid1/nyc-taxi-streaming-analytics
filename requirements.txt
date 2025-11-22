@@ -1,0 +1,7 @@
+pyspark==4.0.1
+pandas==2.3.3
+numpy==2.2.6
+jupyter==1.1.1
+kafka-python==2.3.0
+python-dotenv==1.2.1
+psycopg2-binary==2.9.11

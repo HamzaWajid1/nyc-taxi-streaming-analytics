@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDEs / Editors
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+
+# Logs
+*.log
+
+# Data (avoid pushing large datasets)
+data/raw/
+data/samples/
+
+# Spark temporary files
+spark-warehouse/
+.metastore_db/
+
+# Environment variables
+.env
