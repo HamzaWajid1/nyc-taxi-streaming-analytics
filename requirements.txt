@@ -5,3 +5,5 @@ jupyter==1.1.1
 kafka-python==2.3.0
 python-dotenv==1.2.1
 psycopg2-binary==2.9.11
+pyarrow==22.0.0
+fastparquet==2024.11.0
