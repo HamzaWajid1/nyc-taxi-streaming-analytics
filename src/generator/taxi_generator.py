@@ -21,7 +21,7 @@ for _, row in df.iterrows():
     event = row.to_dict()
     producer.send(TOPIC, event)
     print("Sent:", event)
-    time.sleep(1)  # 1 event per second (adjust as needed)
+    time.sleep(0.5)  # 2 events per second (adjust as needed)
 
 producer.flush()
 print("Finished sending events!")

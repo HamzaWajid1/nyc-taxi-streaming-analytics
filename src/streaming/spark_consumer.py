@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 # Get project root directory
 project_root = Path(__file__).parent.parent.parent
-bronze_path = project_root / "src" / "etl" / "bronze"
+bronze_path = project_root / "data" / "bronze"
 checkpoint_path = project_root / "data" / "bronze" / "checkpoint"
 
 # Create directories if they don't exist
