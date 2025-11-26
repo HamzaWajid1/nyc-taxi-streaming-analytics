@@ -14,14 +14,14 @@ producer = KafkaProducer(
 )
 
 # Load sample data CSV
-df = pd.read_csv("../../data/samples/sample_1k.csv")   # Put your sample file here
+df = pd.read_csv("../../data/samples/sample_100k.csv")   # Put your sample file here
 
 print("Starting event production...")
 for _, row in df.iterrows():
     event = row.to_dict()
     producer.send(TOPIC, event)
     print("Sent:", event)
-    time.sleep(0.5)  # 2 events per second (adjust as needed)
+    time.sleep(0.005)  # 500 events per second (adjust as needed)
 
 producer.flush()
 print("Finished sending events!")

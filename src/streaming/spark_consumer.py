@@ -99,7 +99,7 @@ def main():
             .option("path", str(bronze_path))
             .option("checkpointLocation", str(checkpoint_path))
             .outputMode("append")
-            .trigger(processingTime="10 seconds")  # Process every 10 seconds
+            .trigger(processingTime="5 seconds")  # Process every 5 seconds
             .start()
         )
         

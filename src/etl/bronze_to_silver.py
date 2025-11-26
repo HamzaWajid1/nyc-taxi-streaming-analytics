@@ -2,8 +2,7 @@
 import logging
 from pathlib import Path
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, unix_timestamp, hour, dayofweek, dayofmonth, when, year, month, to_timestamp
-from pyspark.sql.types import StringType
+from pyspark.sql.functions import col, hour, dayofweek, dayofmonth, when, year, month, to_timestamp, expr
 
 # -------------------------------
 # Setup logging
@@ -46,12 +45,22 @@ bronze_df.show(5)
 # -------------------------------
 # 1. Cleaning
 # -------------------------------
+logger.info("Casting numeric columns to proper types...")
+# Cast numeric columns to DoubleType before filtering (JSON reader may infer them as strings)
+silver_df = bronze_df.withColumn("passenger_count", col("passenger_count").cast("double")) \
+    .withColumn("trip_distance", col("trip_distance").cast("double")) \
+    .withColumn("fare_amount", col("fare_amount").cast("double")) \
+    .withColumn("total_amount", col("total_amount").cast("double")) \
+    .withColumn("tip_amount", col("tip_amount").cast("double"))
+
 logger.info("Applying data quality filters...")
-silver_df = bronze_df.filter(
+silver_df = silver_df.filter(
     (col("passenger_count") > 0) &
     (col("trip_distance") > 0) &
     (col("fare_amount") > 0) &
-    (col("total_amount") > 0)
+    (col("total_amount") > 0) &
+    col("tpep_pickup_datetime").isNotNull() &
+    col("tpep_dropoff_datetime").isNotNull()
 )
 logger.info(f"Records after filtering: {silver_df.count()}")
 
@@ -60,21 +69,27 @@ logger.info(f"Records after filtering: {silver_df.count()}")
 # -------------------------------
 logger.info("Adding enriched features...")
 
-# Trip duration in minutes
-silver_df = silver_df.withColumn(
-    "trip_duration_minutes",
-    (unix_timestamp(col("tpep_dropoff_datetime")) - unix_timestamp(col("tpep_pickup_datetime"))) / 60
-)
-
-# Tip percentage
-silver_df = silver_df.withColumn(
-    "tip_pct",
-    (col("tip_amount") / col("fare_amount")) * 100
-)
-
+# Convert datetime strings to timestamps first
 silver_df = silver_df.withColumn(
     "tpep_pickup_datetime",
     to_timestamp(col("tpep_pickup_datetime"), "yyyy-MM-dd HH:mm:ss")
+)
+
+silver_df = silver_df.withColumn(
+    "tpep_dropoff_datetime",
+    to_timestamp(col("tpep_dropoff_datetime"), "yyyy-MM-dd HH:mm:ss")
+)
+
+# Trip duration in minutes (using unix_timestamp for seconds, then convert to minutes)
+silver_df = silver_df.withColumn(
+    "trip_duration_minutes",
+    expr("(unix_timestamp(tpep_dropoff_datetime) - unix_timestamp(tpep_pickup_datetime)) / 60.0")
+)
+
+# Tip percentage (with null safety)
+silver_df = silver_df.withColumn(
+    "tip_pct",
+    when(col("fare_amount") > 0, (col("tip_amount") / col("fare_amount")) * 100).otherwise(0.0)
 )
 
 # Timestamp features
