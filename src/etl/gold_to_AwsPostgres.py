@@ -17,7 +17,7 @@ PG_HOST = "taxi-analytics.cub8m62c075l.us-east-1.rds.amazonaws.com"
 PG_PORT = "5432"
 PG_DB = "taxi_analytics"
 PG_USER = "taxi_user"
-PG_PASSWORD = "taxi.123"
+PG_PASSWORD = ""
 PG_TABLE = "gold_aggregates"
 
 # -------------------------
