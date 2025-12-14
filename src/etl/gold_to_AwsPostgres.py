@@ -13,11 +13,11 @@ POSTGRES_JAR_PATH = "../../data/postgresql-42.7.8.jar"
 GOLD_FOLDER_PATH = "../../data/gold/"
 
 # PostgreSQL connection details (AWS RDS)
-PG_HOST = "taxi-analytics.cub8m62c075l.us-east-1.rds.amazonaws.com"
+PG_HOST = "taxi-analytics.c9as6ek664fc.us-east-2.rds.amazonaws.com"
 PG_PORT = "5432"
-PG_DB = "taxi_analytics"
+PG_DB = "taxi-analytics"
 PG_USER = "taxi_user"
-PG_PASSWORD = ""
+PG_PASSWORD = "taxi.123"
 PG_TABLE = "gold_aggregates"
 
 # -------------------------
